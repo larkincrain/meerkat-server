@@ -1,0 +1,30 @@
+{
+  "name": "carbonchat-server",
+  "version": "1.0.0",
+  "description": "Backend of the carbonchat app",
+  "author": "Larkin Crain <larkincrain@gmail.com>",
+  "contributors": [
+    {
+      "name": "Larkin Crain",
+      "email": "larkincrain@gmail.com"
+    }
+  ],
+  "bin": {
+    "module-name": "./bin/module-name"
+  },
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larkincrain/carbonchat-server"
+  },
+  "bugs": {
+    "url": "https://github.com/larkincrain/carbonchat-server/issues"
+  },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "1.15.2",
+    "express": "4.2.x",
+    "mongoose": "4.7.1",
+    "morgan": "1.4.1"
+  }
+}
