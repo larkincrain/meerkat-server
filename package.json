@@ -1,7 +1,7 @@
 {
-  "name": "carbonchat-server",
+  "name": "meerkat-server",
   "version": "1.0.0",
-  "description": "Backend of the carbonchat app",
+  "description": "Backend of the meerkat app",
   "author": "Larkin Crain <larkincrain@gmail.com>",
   "contributors": [
     {
@@ -15,10 +15,10 @@
   "main": "server.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/larkincrain/carbonchat-server"
+    "url": "https://github.com/larkincrain/meerkat-server"
   },
   "bugs": {
-    "url": "https://github.com/larkincrain/carbonchat-server/issues"
+    "url": "https://github.com/larkincrain/meerkat-server/issues"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
