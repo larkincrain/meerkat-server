@@ -5,25 +5,21 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 // create a schema
-var userSchema = new Schema({
+var organizationSchema = new Schema({
   name: String,
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
   location: String,
   created_at: Date,
   updated_at: Date,
 
-  //global admin, rare
-  admin: Boolean,
-  organizations: [{ type: Schema.Types.ObjectId, ref: 'Organization'}]
-
+  owner: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
 // the schema is useless so far
 // we need to create a model using it
-var User = mongoose.model('User', userSchema);
+var Organization = mongoose.model('Organization', organizationSchema);
 
 // make this available to our users in our Node applications
-module.exports = User;
+module.exports = Organization;
 
 
