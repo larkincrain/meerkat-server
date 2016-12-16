@@ -4,7 +4,8 @@ var express  = require('express'),
     config = require('./config.js'),
 	morgan = require('morgan'),
 	bcrypt = require('bcrypt-nodejs'),
-	jwt = require('jsonwebtoken');
+	jwt = require('jsonwebtoken'),
+	cors = require('cors');
 
 
 var server = express();
@@ -26,6 +27,16 @@ var Media = require('./models/media');
 
 // Static Routes
 var staticRouter = express.Router();
+
+server.use(function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+});
+
+server.use(cors());
 
 server.get('/', function(req, res) {
 	
@@ -54,11 +65,25 @@ apiRouter.post('/users', function(req, res){
 	// save the user
 	newUser.save(function(err) {
 		if (err) {
-			res.json({ message: 'error saving user: ' + err});
+			return res.json({ 
+				success: false, 
+				message: 'error saving user: ' + err
+			});
 		} 
 
-	  console.log('User created!');
-	  res.json({ message: 'user created successfully!'});
+	  	console.log('User created!');
+
+		// now let's create a token for them!
+		var token = jwt.sign(newUser, config.auth.secret, {
+			expiresIn: '24h' 
+		});
+
+
+		res.json({ 
+			success: true, 
+			message: 'user created successfully!',
+			token: token
+		});
 	});
 });
 apiRouter.post('/authenticate', function(req, res){
@@ -86,7 +111,7 @@ apiRouter.post('/authenticate', function(req, res){
 					//authenticate has worked, now we need to return a JWT
 
 					var token = jwt.sign(user, config.auth.secret, {
-						expiresIn: '1h' 
+						expiresIn: '24h' 
 					});
 
 					res.json({

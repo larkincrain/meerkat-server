@@ -26,6 +26,7 @@
     "express": "4.2.x",
     "mongoose": "4.7.1",
     "morgan": "1.4.1",
-    "jsonwebtoken": "latest"
+    "jsonwebtoken": "latest",
+    "cors": "latest"
   }
 }
