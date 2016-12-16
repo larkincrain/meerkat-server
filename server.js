@@ -87,6 +87,9 @@ apiRouter.post('/users', function(req, res){
 	});
 });
 apiRouter.post('/authenticate', function(req, res){
+	//debugging
+	console.log('email: ' + req.body.email);
+	console.log('password: ' + req.body.password);
 
 	//get the user with the name passed in
 	Users.findOne(
@@ -153,6 +156,9 @@ apiRouter.use( function(req, res, next){
 			}
 		});
 	} else {
+
+		console.log('failed in authenticate middleware');
+
 		// if there is no token then we need to return an error
 		return res.status(403).send({
 			message: 'No token provided',
