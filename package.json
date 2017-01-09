@@ -1,25 +1,7 @@
 {
-  "name": "meerkat-server",
-  "version": "1.0.0",
-  "description": "Backend of the meerkat app",
-  "author": "Larkin Crain <larkincrain@gmail.com>",
-  "contributors": [
-    {
-      "name": "Larkin Crain",
-      "email": "larkincrain@gmail.com"
-    }
-  ],
-  "bin": {
-    "module-name": "./bin/module-name"
-  },
-  "main": "server.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/larkincrain/meerkat-server"
-  },
-  "bugs": {
-    "url": "https://github.com/larkincrain/meerkat-server/issues"
-  },
+  "name": "Meerkat",
+  "version": "0.0.1",
+  "private": true,
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.15.2",
@@ -28,5 +10,9 @@
     "morgan": "1.4.1",
     "jsonwebtoken": "latest",
     "cors": "latest"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }
+

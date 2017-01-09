@@ -24,6 +24,7 @@ var Users = require('./models/user');
 var Organizations = require('./models/organization');
 var Promotions = require('./models/promotion');
 var Media = require('./models/media');
+var Beacons = require('./models/beacon');
 
 // Static Routes
 var staticRouter = express.Router();
@@ -50,6 +51,7 @@ apiRouter.get('/', function(req, res) {
 
     res.json({ message: 'hooray! welcome to our api!' });   
 });
+
 apiRouter.post('/users', function(req, res){
 	// create a new user
 	var newUser = Users({
@@ -174,9 +176,6 @@ apiRouter.get('/users', function(req, res){
 	Users.find({}, function(err, users) {
 		if (err) throw err;
 
-		// object of all the users
-		console.log(users);
-
 		//return the array in json form
 		res.json(users);
 	});
@@ -197,9 +196,6 @@ apiRouter.get('/organizations', function(req, res){
 	//let's display all the organizations
 	Organizations.find({}, function(err, organizations) {
 		if (err) throw err;
-
-		// object of all the organizations
-		console.log(organizations);
 
 		//return the array in json form
 		res.json(organizations);
@@ -240,9 +236,6 @@ apiRouter.get('/promotions', function(req, res){
 	Promotions.find({}, function(err, promotions) {
 		if (err) throw err;
 
-		// object of all the promotions
-		console.log(promotions);
-
 		//return the array in json form
 		res.json(promotions);
 	});
@@ -273,6 +266,47 @@ apiRouter.get('/promotions/:promotion_id', function(req, res){
 		res.json(promotion);
 	});
 });
+
+// beacon routes
+apiRouter.get('/beacons', function(req, res){
+	//let's display all the organizations
+	Beacons.find({}, function(err, beacons) {
+		if (err) throw err;
+
+		//return the array in json form
+		res.json(beacons);
+	});
+});
+apiRouter.post('/beacons', function(req, res){
+	// create a new promotion
+	var newBeacon = Beacons({
+	  name: req.body.name,
+	  description: req.body.description,
+	  broadcastId: req.body.broadcastId,
+	  createDate: new Date(),
+	  active: req.body.active,
+	  promotion: req.body.promotion
+	});
+
+	// save the promotion
+	newBeacon.save(function(err) {
+		if (err) {
+			res.json({ message: 'error saving the beacon: ' + err});
+		} 
+
+	  console.log('Beacon created!');
+	  res.json({ message: 'Beacon created successfully!'});
+	});
+});
+apiRouter.get('/beacosn/:beacon_id', function(req, res){
+	Beacons.findById(req.params.beacon_id, function(err, beacon){
+		if (err) {
+			return res.json({ message: 'No beacon exists for this ID'});
+		}
+
+		res.json(beacon);
+	});	
+})
 
 // register the routes to the /api directory
 server.use('/api', apiRouter);

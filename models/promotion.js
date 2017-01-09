@@ -10,10 +10,6 @@ var promotionSchema = new Schema({
 	text: String,
 	media: [{ type: Schema.Types.ObjectId, ref: 'Media'}],
 
-
-	created_at: Date,
-	updated_at: Date,
-
 	organization: { type: Schema.Types.ObjectId, ref: 'Organization'}
 });
 
