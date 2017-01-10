@@ -266,6 +266,16 @@ apiRouter.get('/promotions/:promotion_id', function(req, res){
 		res.json(promotion);
 	});
 });
+apiRouter.get('/promotions/beaconId/:beacon_id', function(req, res){
+	Promotions.findOne('beaconId': req.params.promotion_id, function(err, promotion){
+		if (err) {
+			return res.json({ message: 'No promotion exists for this beacon ID'});
+		}
+
+		res.json(promotion);
+	});
+});
+
 
 // beacon routes
 apiRouter.get('/beacons', function(req, res){
@@ -298,7 +308,7 @@ apiRouter.post('/beacons', function(req, res){
 	  res.json({ message: 'Beacon created successfully!'});
 	});
 });
-apiRouter.get('/beacosn/:beacon_id', function(req, res){
+apiRouter.get('/beacons/:beacon_id', function(req, res){
 	Beacons.findById(req.params.beacon_id, function(err, beacon){
 		if (err) {
 			return res.json({ message: 'No beacon exists for this ID'});

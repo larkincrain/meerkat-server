@@ -9,6 +9,7 @@ var promotionSchema = new Schema({
 	title: String,
 	text: String,
 	media: [{ type: Schema.Types.ObjectId, ref: 'Media'}],
+	beaconId: { type: Schema.Types.ObjectId, ref: 'Beacon'}
 
 	organization: { type: Schema.Types.ObjectId, ref: 'Organization'}
 });
