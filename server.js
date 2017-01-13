@@ -11,6 +11,7 @@ var express  = require('express'),
 var server = express();
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
+server.use(bodyParser({ limit: '50mb'}));
 server.use(morgan('dev')); // LOGGER
 
 // Connect to the hosted mongo DB instance
@@ -244,7 +245,8 @@ apiRouter.post('/promotions', function(req, res){
 	// create a new promotion
 	var newPromotion = Promotions({
 	  title: req.body.title,
-	  text: req.body.text
+	  text: req.body.text,
+	  beaconId: beaconId
 	});
 
 	// save the promotion
@@ -266,8 +268,27 @@ apiRouter.get('/promotions/:promotion_id', function(req, res){
 		res.json(promotion);
 	});
 });
+apiRouter.put('/promotions/:promotion_id', function(req, res) {
+	// we need to update a promotion with with each of the properties that we send
+	Promotions.findById(req.params.promotion_id, function(err, promotion) {
+
+		if(err) {
+			return res.json({message: 'No promotion exists for this ID'});
+		}
+
+		// now we need to iterate over the properties we want to be able to mutate
+		if (req.params.title)
+			promotion.title = req.params.title;
+		if (req.params.text)
+			promotion.text = req.params.text;
+		if (req.params.beaconId)
+			promotion.beaconId = req.params.beaconId;
+		if (req.params.media)
+			promotion.media.push(req.params.media);
+	});
+});
 apiRouter.get('/promotions/beaconId/:beacon_id', function(req, res){
-	Promotions.findOne('beaconId': req.params.promotion_id, function(err, promotion){
+	Promotions.findOne( {'beaconId': req.params.promotion_id}, function(err, promotion){
 		if (err) {
 			return res.json({ message: 'No promotion exists for this beacon ID'});
 		}
@@ -276,6 +297,44 @@ apiRouter.get('/promotions/beaconId/:beacon_id', function(req, res){
 	});
 });
 
+// media routes
+apiRouter.get('/media', function(req, res){
+	//let's display all the media
+	Media.find({}, function(err, media) {
+		if (err) throw err;
+
+		//return the array in json form
+		res.json(media);
+	});
+});
+apiRouter.post('/media', function(req, res) {
+	// create a new media object 
+	var newMedia = Media({
+		title: req.body.title,
+		data: req.body.data,
+		owner: req.body.owner,
+	  	createdDate: req.body.createDate
+	});
+
+	// save the promotion
+	newMedia.save(function(err) {
+		if (err) {
+			res.json({ message: 'error saving the media: ' + err});
+		} 
+
+	  console.log('Media created!');
+	  res.json({ message: 'Media created successfully!'});
+	});
+});
+apiRouter.get('/media/:media_id', function(req, res) {
+	Media.findById(req.params.media_id, function(err, media){
+		if (err) {
+			return res.json({ message: 'No media exists for this ID'});
+		}
+
+		res.json(media);
+	});	
+});
 
 // beacon routes
 apiRouter.get('/beacons', function(req, res){
