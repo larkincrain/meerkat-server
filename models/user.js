@@ -10,8 +10,15 @@ var userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   location: String,
+
   created_at: Date,
   updated_at: Date,
+
+  profile_picture: String,
+  media: [{ type: Schema.Types.ObjectId, ref: 'Media'}],
+
+  favorites: [{ type: Schema.Types.ObjectId, ref: 'Promotion' }],
+  bookmarks: [{ type: Schema.Types.ObjectId, ref: 'Promotion' }],
 
   //global admin, rare
   admin: Boolean,

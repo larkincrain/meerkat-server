@@ -9,9 +9,9 @@ var express  = require('express'),
 
 
 var server = express();
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
-server.use(bodyParser({ limit: '50mb'}));
+server.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
+server.use(bodyParser.json({ limit: '5mb'}));
+//server.use(bodyParser.urlencoded({ limit: '5mb'}));
 server.use(morgan('dev')); // LOGGER
 
 // Connect to the hosted mongo DB instance
@@ -20,7 +20,7 @@ mongoose.connect( config.database.connectionURI, function (error) {
     else console.log('mongo connected');
 });
 
-// lets load the models
+// lets load the mod els
 var Users = require('./models/user');
 var Organizations = require('./models/organization');
 var Promotions = require('./models/promotion');
@@ -81,7 +81,6 @@ apiRouter.post('/users', function(req, res){
 			expiresIn: '24h' 
 		});
 
-
 		res.json({ 
 			success: true, 
 			message: 'user created successfully!',
@@ -123,7 +122,8 @@ apiRouter.post('/authenticate', function(req, res){
 					res.json({
 						message: 'Welcome!',
 						success: true,
-						jwt: token
+						jwt: token,
+						user: user
 					});
 
 				} else {
@@ -191,6 +191,29 @@ apiRouter.get('/users/:user_id', function(req, res){
 		res.json(user);
 	});
 });
+apiRouter.put('/users/favorite', function(req, res){
+	console.log('PromotionId:' + req.body.promotion_id);
+
+	Users.findById(req.body.user_id, function(err, user){
+		if (err) {
+			return res.json({ message: 'No user exists for this user ID'});
+		}
+
+		//let's see if we can find a promotion to match the ID provided
+		Promotions.findById(req.body.promotion_id, function (err, promotion){
+			if (err) {
+				return res.json({message: 'No promotion exists for this promotion ID'});
+			}
+
+			//cool, let's update the favorites list of the user
+			user.favorites.push(promotion);
+			user.save();
+
+			res.json(user);
+		});		
+	});
+});
+
 
 // organization routes
 apiRouter.get('/organizations', function(req, res){
@@ -288,13 +311,15 @@ apiRouter.put('/promotions/:promotion_id', function(req, res) {
 	});
 });
 apiRouter.get('/promotions/beaconId/:beacon_id', function(req, res){
-	Promotions.findOne( {'beaconId': req.params.promotion_id}, function(err, promotion){
+	console.log('broadcastId:' + req.params.beacon_id);
+
+	Promotions.findOne( {'broadcastId': req.params.beacon_id}, function(err, promotion){
 		if (err) {
 			return res.json({ message: 'No promotion exists for this beacon ID'});
 		}
 
 		res.json(promotion);
-	});
+	}).populate('organization').populate('media');
 });
 
 // media routes

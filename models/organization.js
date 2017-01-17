@@ -11,7 +11,8 @@ var organizationSchema = new Schema({
   location: String,
   created_at: Date,
   updated_at: Date,
-
+  media: [{type: Schema.Types.ObjectId, ref: 'Media'}],
+  profile_picture: String,
   owner: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
